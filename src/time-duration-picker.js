@@ -67,12 +67,14 @@ angular.module('ez.timepicker', [])
 
           function deconstructSeconds(totalSeconds) {
               totalSeconds = Number(totalSeconds);
-              var totalSecondsToHours = Math.floor(totalSeconds / 3600);
-              var totalSecondsToMinutes = Math.floor(totalSeconds % 3600 / 60);
-              var totalSecondsToSeconds = Math.floor(totalSeconds % 3600 % 60);
+	          var totalSecondsToDays = Math.floor(totalSeconds / (3600 * 24))
+              var totalSecondsToHours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+              var totalSecondsToMinutes = Math.floor((totalSeconds % 3600) / 60);
+              var totalSecondsToSeconds = Math.floor(totalSeconds % 60);
               scope.widget.hours = totalSecondsToHours;
               scope.widget.minutes = totalSecondsToMinutes;
               scope.widget.seconds = totalSecondsToSeconds;
+              scope.widget.days = totalSecondsToDays;
           }
 
           scope.preventDefault = function(e) {
@@ -118,7 +120,7 @@ angular.module('ez.timepicker', [])
           scope.decrementDays = function() {
             if (parseInt(scope.widget.days, 10)) {
               scope.widget.days --;
-            } else {
+            } else if (scope.showMonth) {
               scope.decrementMonths();
               scope.widget.days = 31;
             }
@@ -266,7 +268,7 @@ angular.module('ez.timepicker', [])
             if (angular.isDefined(scope.widget.hours) && angular.isDefined(scope.widget.minutes)) {
               formatOutput();
               element.find('input').first().val(scope.time);
-              var totalTime = (parseInt(scope.widget.hours, 10) * 60 * 60) + scope.widget.minutesAsSeconds + parseInt(scope.widget.seconds, 10);
+              var totalTime = (parseInt(scope.widget.hours, 10) * 60 * 60) + (scope.widget.minutes * 60) + parseInt(scope.widget.seconds, 10) + (scope.widget.days * 24 * 60 * 60);
               ngModel.$setViewValue(totalTime);
             } else {
               setTime(scope.time);
