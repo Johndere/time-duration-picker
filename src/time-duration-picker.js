@@ -159,6 +159,7 @@ angular.module('ez.timepicker', [])
                 scope.widget.hours = 12;
               } else {
                 scope.widget.hours = 23;
+                scope.decrementDays();
               }
               if (scope.widget.meridians === 'AM') {
                 scope.decrementDays();
@@ -487,3 +488,4 @@ angular.module('ez.timepicker', [])
   );
 
 }]);
+
